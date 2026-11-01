@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, PRAYERS
 from .coordinator import PrayerTimetableCoordinator
+from .extract import output_time
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -21,6 +22,7 @@ class PrayerSensorEntityDescription(SensorEntityDescription):
     """Prayer sensor description."""
 
     prayer: str | None = None
+    display_prayer: str | None = None
 
 
 PRAYER_DESCRIPTIONS = tuple(
@@ -33,12 +35,25 @@ PRAYER_DESCRIPTIONS = tuple(
     for prayer in PRAYERS
 )
 
+PRAYER_DISPLAY_DESCRIPTIONS = tuple(
+    PrayerSensorEntityDescription(
+        key=f"{prayer}_time",
+        translation_key=f"{prayer}_time",
+        display_prayer=prayer,
+    )
+    for prayer in PRAYERS
+)
+
 EXTRA_DESCRIPTIONS = (
     PrayerSensorEntityDescription(key="next_prayer", translation_key="next_prayer"),
     PrayerSensorEntityDescription(
         key="next_prayer_time",
         translation_key="next_prayer_time",
         device_class=SensorDeviceClass.TIMESTAMP,
+    ),
+    PrayerSensorEntityDescription(
+        key="next_prayer_time_display",
+        translation_key="next_prayer_time_display",
     ),
     PrayerSensorEntityDescription(
         key="row_count",
@@ -57,7 +72,11 @@ async def async_setup_entry(
     coordinator: PrayerTimetableCoordinator = entry.runtime_data
     async_add_entities(
         PrayerTimetableSensor(coordinator, entry, description)
-        for description in (*PRAYER_DESCRIPTIONS, *EXTRA_DESCRIPTIONS)
+        for description in (
+            *PRAYER_DESCRIPTIONS,
+            *PRAYER_DISPLAY_DESCRIPTIONS,
+            *EXTRA_DESCRIPTIONS,
+        )
     )
 
 
@@ -92,10 +111,21 @@ class PrayerTimetableSensor(CoordinatorEntity[PrayerTimetableCoordinator], Senso
 
         if self.entity_description.prayer:
             return data.prayer_datetimes.get(self.entity_description.prayer)
+        if self.entity_description.display_prayer:
+            if data.today_row is None:
+                return None
+            return output_time(
+                getattr(data.today_row, self.entity_description.display_prayer),
+                self.entity_description.display_prayer,
+            )
         if self.entity_description.key == "next_prayer":
             return data.next_prayer
         if self.entity_description.key == "next_prayer_time":
             return data.next_prayer_time
+        if self.entity_description.key == "next_prayer_time_display":
+            if data.next_prayer_time is None:
+                return None
+            return data.next_prayer_time.strftime("%H:%M")
         if self.entity_description.key == "row_count":
             return data.row_count
         return None

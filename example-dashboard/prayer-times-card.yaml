@@ -1,0 +1,30 @@
+# Built-in Home Assistant cards. Replace the entity ids if your integration
+# instance uses a different name, for example sensor.mosque_fajr.
+type: vertical-stack
+cards:
+  - type: markdown
+    content: |
+      {% set next_prayer = states('sensor.prayer_timetable_next_prayer') %}
+      {% set next_time = states('sensor.prayer_timetable_next_prayer_time_display') %}
+      {% if has_value('sensor.prayer_timetable_next_prayer_time_display') %}
+      ## Next: {{ next_prayer | title }}
+
+      # {{ next_time }}
+      {% else %}
+      ## No upcoming prayer today
+      {% endif %}
+
+  - type: entities
+    title: Today's Prayer Times
+    show_header_toggle: false
+    entities:
+      - entity: sensor.prayer_timetable_fajr_time
+        name: Fajr
+      - entity: sensor.prayer_timetable_dhuhr_time
+        name: Dhuhr
+      - entity: sensor.prayer_timetable_asr_time
+        name: Asr
+      - entity: sensor.prayer_timetable_maghrib_time
+        name: Maghrib
+      - entity: sensor.prayer_timetable_isha_time
+        name: Isha

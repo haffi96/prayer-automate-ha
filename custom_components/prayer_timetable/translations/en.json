@@ -34,8 +34,14 @@
       "asr": {"name": "Asr"},
       "maghrib": {"name": "Maghrib"},
       "isha": {"name": "Isha"},
+      "fajr_time": {"name": "Fajr time"},
+      "dhuhr_time": {"name": "Dhuhr time"},
+      "asr_time": {"name": "Asr time"},
+      "maghrib_time": {"name": "Maghrib time"},
+      "isha_time": {"name": "Isha time"},
       "next_prayer": {"name": "Next prayer"},
       "next_prayer_time": {"name": "Next prayer time"},
+      "next_prayer_time_display": {"name": "Next prayer time display"},
       "row_count": {"name": "Rows parsed"}
     }
   }

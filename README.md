@@ -44,9 +44,69 @@ Paths from the machine where you run a browser or development shell are not auto
 The integration creates these sensors:
 
 - Fajr, Dhuhr, Asr, Maghrib, and Isha — timestamp sensors
+- Fajr time, Dhuhr time, Asr time, Maghrib time, and Isha time — plain text
+  time sensors for dashboards and widgets
 - Next prayer — the name of the next prayer today
 - Next prayer time — timestamp sensor for the next prayer today
+- Next prayer time display — plain text time sensor for dashboards and widgets
 - Rows parsed — diagnostic count of parsed timetable rows
+
+## Dashboard card
+
+Add the built-in card from
+[`example-dashboard/prayer-times-card.yaml`](example-dashboard/prayer-times-card.yaml)
+to a Home Assistant dashboard:
+
+1. Open the dashboard.
+2. Select **Edit dashboard**.
+3. Select **Add card**.
+4. Select **Manual**.
+5. Paste the YAML and save.
+
+The example assumes the default entity ids:
+
+```yaml
+sensor.prayer_timetable_fajr
+sensor.prayer_timetable_dhuhr
+sensor.prayer_timetable_asr
+sensor.prayer_timetable_maghrib
+sensor.prayer_timetable_isha
+sensor.prayer_timetable_fajr_time
+sensor.prayer_timetable_dhuhr_time
+sensor.prayer_timetable_asr_time
+sensor.prayer_timetable_maghrib_time
+sensor.prayer_timetable_isha_time
+sensor.prayer_timetable_next_prayer
+sensor.prayer_timetable_next_prayer_time
+sensor.prayer_timetable_next_prayer_time_display
+```
+
+If your integration instance has another name, replace those ids with the
+entities shown in **Settings → Devices & services → Prayer Timetable → Entities**.
+
+There is also an optional richer example at
+[`example-dashboard/prayer-times-button-card.yaml`](example-dashboard/prayer-times-button-card.yaml).
+It requires the `button-card` custom Lovelace card from HACS.
+
+## Android widget
+
+Use the Home Assistant Companion App **Template** widget with the plain text
+time sensors:
+
+```jinja
+Next: {{ states('sensor.prayer_timetable_next_prayer') | title }}
+{{ states('sensor.prayer_timetable_next_prayer_time_display') }}
+
+Fajr: {{ states('sensor.prayer_timetable_fajr_time') }}
+Dhuhr: {{ states('sensor.prayer_timetable_dhuhr_time') }}
+Asr: {{ states('sensor.prayer_timetable_asr_time') }}
+Maghrib: {{ states('sensor.prayer_timetable_maghrib_time') }}
+Isha: {{ states('sensor.prayer_timetable_isha_time') }}
+```
+
+These display sensors are intended for widgets because Android widget templates
+cannot format a timestamp sensor when Home Assistant reports its state as
+`unknown`.
 
 ## Export parsed rows
 

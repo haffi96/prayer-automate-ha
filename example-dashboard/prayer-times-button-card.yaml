@@ -1,0 +1,73 @@
+# Optional richer card using the custom:button-card Lovelace card.
+# Install button-card from HACS before using this example.
+# Replace the entity ids if your integration instance uses a different name.
+type: vertical-stack
+cards:
+  - type: custom:button-card
+    entity: sensor.prayer_timetable_next_prayer_time_display
+    name: >
+      [[[
+        const prayer = states['sensor.prayer_timetable_next_prayer']?.state;
+        if (!prayer || ['unknown', 'unavailable', 'none'].includes(prayer)) {
+          return 'No upcoming prayer';
+        }
+        return `Next: ${prayer.charAt(0).toUpperCase()}${prayer.slice(1)}`;
+      ]]]
+    label: >
+      [[[
+        if (!entity || ['unknown', 'unavailable'].includes(entity.state)) {
+          return '';
+        }
+        return entity.state;
+      ]]]
+    show_label: true
+    show_state: false
+    icon: mdi:clock-outline
+    styles:
+      card:
+        - padding: 18px
+        - border-radius: 8px
+      grid:
+        - grid-template-areas: '"i n" "i l"'
+        - grid-template-columns: 48px 1fr
+        - grid-template-rows: min-content min-content
+      icon:
+        - width: 32px
+      name:
+        - justify-self: start
+        - font-size: 16px
+        - font-weight: 600
+      label:
+        - justify-self: start
+        - font-size: 32px
+        - font-weight: 700
+
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: custom:button-card
+        entity: sensor.prayer_timetable_fajr_time
+        name: Fajr
+        show_state: true
+        icon: mdi:weather-sunset-up
+      - type: custom:button-card
+        entity: sensor.prayer_timetable_dhuhr_time
+        name: Dhuhr
+        show_state: true
+        icon: mdi:white-balance-sunny
+      - type: custom:button-card
+        entity: sensor.prayer_timetable_asr_time
+        name: Asr
+        show_state: true
+        icon: mdi:weather-sunny
+      - type: custom:button-card
+        entity: sensor.prayer_timetable_maghrib_time
+        name: Maghrib
+        show_state: true
+        icon: mdi:weather-sunset-down
+      - type: custom:button-card
+        entity: sensor.prayer_timetable_isha_time
+        name: Isha
+        show_state: true
+        icon: mdi:weather-night
