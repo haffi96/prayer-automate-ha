@@ -1,0 +1,106 @@
+# Large clock plus today's prayer times, sized for phones and wall tablets.
+# Requires the card-mod custom card from HACS, and sensor.time from the
+# Time & Date integration. Works best in a view set to the "Panel" type.
+# Replace the entity ids if your integration instance uses a different name.
+type: vertical-stack
+cards:
+  - type: entities
+    show_header_toggle: false
+    entities:
+      - entity: sensor.time
+    card_mod:
+      style:
+        .: |-
+          ha-card {
+            font-family: inherit;
+            font-size: 64px;
+          }
+
+          #states {
+            padding: 16px 20px;
+          }
+
+          @media (min-width: 768px) {
+            ha-card {
+              font-size: 100px;
+            }
+          }
+        hui-generic-entity-row:
+          $: |-
+            state-badge, .info {
+              display: none !important;
+            }
+
+            :host {
+              display: flex;
+              justify-content: center;
+            }
+
+            .state {
+              flex: 1 !important;
+              margin: 0 !important;
+              font-size: inherit !important;
+              font-weight: 700;
+              line-height: 1;
+              text-align: center !important;
+            }
+  - type: entities
+    show_header_toggle: false
+    entities:
+      - entity: sensor.prayer_timetable_fajr
+        name: Fajr
+        icon: mdi:weather-sunset-up
+        time_format: time
+      - entity: sensor.prayer_timetable_dhuhr
+        name: Dhuhr
+        icon: mdi:weather-sunny
+        time_format: time
+      - entity: sensor.prayer_timetable_asr
+        name: Asr
+        icon: mdi:weather-partly-cloudy
+        time_format: time
+      - entity: sensor.prayer_timetable_maghrib
+        name: Maghrib
+        icon: mdi:weather-sunset-down
+        time_format: time
+      - entity: sensor.prayer_timetable_isha
+        name: Isha
+        icon: mdi:weather-night
+        time_format: time
+    card_mod:
+      style: |-
+        /* Phones by default */
+        ha-card {
+          font-size: 20px;
+        }
+
+        .card-header {
+          font-size: 28px;
+        }
+
+        #states {
+          padding: 8px 12px 12px;
+        }
+
+        hui-generic-entity-row {
+          min-height: 48px;
+        }
+
+        /* iPad and larger screens */
+        @media (min-width: 768px) {
+          ha-card {
+            font-size: 40px;
+          }
+
+          .card-header {
+            font-size: 50px;
+          }
+
+          #states {
+            padding: 12px 20px 20px;
+          }
+
+          hui-generic-entity-row {
+            min-height: 64px;
+          }
+        }

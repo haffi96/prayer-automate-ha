@@ -88,6 +88,13 @@ There is also an optional richer example at
 [`example-dashboard/prayer-times-button-card.yaml`](example-dashboard/prayer-times-button-card.yaml).
 It requires the `button-card` custom Lovelace card from HACS.
 
+For a phone or wall tablet, try
+[`example-dashboard/prayer-times-panel.yaml`](example-dashboard/prayer-times-panel.yaml).
+It shows a large clock above today's prayer times and scales up on screens
+768px and wider. It requires the `card-mod` custom card from HACS and
+`sensor.time` from the Time & Date integration. Put it in a view set to the
+**Panel** type so it fills the screen.
+
 ## Android widget
 
 Use the Home Assistant Companion App **Template** widget with the plain text
