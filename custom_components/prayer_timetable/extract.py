@@ -77,7 +77,11 @@ def output_time(value: str, prayer: str) -> str:
     hour_text, minute_text = normalise_time(value).split(":", maxsplit=1)
     hour = int(hour_text)
     minute = int(minute_text)
-    if prayer in {"dhuhr", "asr", "maghrib", "isha"} and hour < 12:
+    # Dhuhr can fall before noon (e.g. 11:49 in winter), so only treat it as
+    # a 12-hour PM time when the hour is clearly after midday (1:xx, 2:xx).
+    if prayer == "dhuhr" and hour < 6:
+        hour += 12
+    elif prayer in {"asr", "maghrib", "isha"} and hour < 12:
         hour += 12
     return f"{hour:02d}:{minute:02d}"
 
